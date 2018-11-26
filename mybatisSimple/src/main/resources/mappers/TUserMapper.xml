@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.enjoylearning.mybatis.mapper.TUserMapper">
+	<resultMap id="BaseMap" type="com.enjoylearning.mybatis.entity.TUser" >
+		<id property="id" column="id" />
+		<result property="userName" column="user_name" />
+		<result property="positionId" column="position_id" />
+		<!--<collection property="roles" column="id" select="com.enjoylearning.mybatis.mapper.TRoleMapper.selectByUserId" columnPrefix="role_" fetchType="lazy" />-->
+	</resultMap>
+	<!--嵌套结果map-->
+	<resultMap id="BaseMapNestingResult" type="com.enjoylearning.mybatis.entity.TUser" extends="BaseMap">
+		<association property="account" javaType="com.enjoylearning.mybatis.entity.TAccount"  columnPrefix="account_" >
+			<id property="id"  column="id" />
+			<result property="money" column="money" />
+		</association>
+	</resultMap>
+    <!--嵌套查询map-->
+    <resultMap id="BaseMapNestingQuery" type="com.enjoylearning.mybatis.entity.TUser" extends="BaseMap">
+        <!--column="id" 表示TUser的id-->
+        <association property="account" column="id" select="com.enjoylearning.mybatis.mapper.TAccountMapper.selectByPrimaryKey"  />
+    </resultMap>
+    <!--嵌套查m询ap lazy-->
+    <resultMap id="BaseMapNestingQueryWithLazy" type="com.enjoylearning.mybatis.entity.TUser" extends="BaseMap" >
+        <association property="account" column="id" select="com.enjoylearning.mybatis.mapper.TAccountMapper.selectByPrimaryKey" fetchType="lazy" />
+    </resultMap>
+    <!--嵌套查m询ap lazy-->
+    <resultMap id="BaseMapNestingQueryWithLazyCollection" type="com.enjoylearning.mybatis.entity.TUser" extends="BaseMap">
+        <collection property="roles" column="id" select="com.enjoylearning.mybatis.mapper.TRoleMapper.selectByUserId" fetchType="lazy" />
+    </resultMap>
+    <!--association collection同时存在-->
+    <resultMap id="BaseMapNestingQueryWithLazyCollectionAssociation" type="com.enjoylearning.mybatis.entity.TUser" extends="BaseMap">
+        <association property="account" column="id" select="com.enjoylearning.mybatis.mapper.TAccountMapper.selectByPrimaryKey" fetchType="lazy" />
+        <collection property="roles" column="id" select="com.enjoylearning.mybatis.mapper.TRoleMapper.selectByUserId" fetchType="lazy" />
+    </resultMap>
+
+    <!--多对多例子  一对多嵌套结果 -->
+    <resultMap id="BaseMapNestingResultCollection" type="com.enjoylearning.mybatis.entity.TUser" extends="BaseMap">
+        <!--一对多嵌套结果 需要使用 ofType 属性-->
+        <collection property="groups" ofType="com.enjoylearning.mybatis.entity.TGroup" columnPrefix="group_" >
+            <id property="groupId" column="group_id" />
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <!--普通查询 返回类型为java类-->
+    <select id="selectByPrimaryKey" resultType="com.enjoylearning.mybatis.entity.TUser" parameterType="java.lang.Integer">
+        select <include refid="BaseSql"/> from t_user where id = #{id}
+    </select>
+    <!--普通查询 返回类型为resultMap-->
+    <select id="selectByPrimaryKeyReturnResultMap" resultMap="BaseMap" parameterType="java.lang.Integer">
+        select id, user_name , real_name , sex, mobile, email, note, position_id positionId from t_user where id = #{id}
+    </select>
+    <!--嵌套结果-->
+	<select id="selectByPrimaryKeyNestingResult" resultMap="BaseMapNestingResult" parameterType="java.lang.Integer" >
+		select a.id,a.user_name,b.id account_id,b.money account_money  from t_user a left join t_account b on a.id=b.id where a.id=#{id}
+	</select>
+    <!--嵌套查询-->
+    <select id="selectByPrimaryKeyNestingQuery" resultMap="BaseMapNestingQuery" parameterType="java.lang.Integer">
+           select id, user_name , real_name , sex, mobile, email, note, position_id positionId from t_user where id = #{id}
+    </select>
+    <!--嵌套查询 懒加载-->
+    <select id="selectByPrimaryKeyNestingQueryWithLazy" resultMap="BaseMapNestingQueryWithLazy" parameterType="java.lang.Integer">
+           select id, user_name , real_name , sex, mobile, email, note, position_id positionId from t_user where id = #{id}
+    </select>
+    <!--一对多嵌套查询-->
+    <select id="selectByPrimaryKeyNestingQueryCollection" resultMap="BaseMapNestingQueryWithLazyCollection" parameterType="java.lang.Integer">
+        select id, user_name , real_name , sex, mobile, email, note, position_id positionId from t_user where id = #{id}
+    </select>
+    <!--一对多嵌套查询 association和collection同时存在-->
+    <select id="selectByPrimaryKeyNestingQueryWithLazyCollectionAndAssociation" flushCache="true" resultMap="BaseMapNestingQueryWithLazyCollectionAssociation" parameterType="java.lang.Integer">
+        select id, user_name , real_name , sex, mobile, email, note, position_id positionId from t_user where id = #{id}
+    </select>
+    <!--一对多 嵌套结果-->
+    <select id="selectTUserById" resultMap="BaseMapNestingResultCollection" parameterType="java.lang.Integer" >
+        select a.id, a.user_name ,a.real_name , a.sex, a.mobile, a.email, a.note, a.position_id positionId,c.group_id,c.name group_name from t_user a,t_user_group b, t_group c  where id = #{id} and a.id=b.user_id and b.group_id=c.group_id
+    </select>
+    <!--插入用户 通过自增主键-->
+    <insert id="insertByAutoIncrease" parameterType="TUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user (<include refid="BaseSql"/>)values (#{id},#{userName},#{realName},#{sex},#{mobile},#{email},#{note},#{positionId})
+    </insert>
+    <!--插入用户 通过selectKey-->
+    <insert id="insertBySelectKey" parameterType="TUser" >
+        insert into t_user (<include refid="BaseSql"/>)values (#{id},#{userName},#{realName},#{sex},#{mobile},#{email},#{note},#{positionId})
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            select LAST_INSERT_ID()
+--             oracle：select SEQ_ID.nextval from dual 并且order改为before
+        </selectKey>
+    </insert>
+    <delete id="deleteByUserId" parameterType="int" >
+        delete from t_user where id=#{id}
+    </delete>
+    <update id="updateUser" parameterType="TUser" >
+        update t_user
+        <trim prefix="set" suffixOverrides=",">
+            id =#{id},
+            <if test="userName!=null" >
+                user_name=#{userName},
+            </if>
+            <if test="id!=null">
+
+            </if>
+        </trim>
+        where id =#{id}
+--         where 语句 不用想着动态，搞不好设置错了，一般情况下都是根据主键来修改，如果id=null
+--         set元素会自动去除多余的逗号 ,在set下增加id =id 是为了防止user对象所有属性为null时使得程序报错误，根据返回值影响行数查看更新是否成功,如果为0,则需要根据日志查看查询语句
+    </update>
+    <select id="selectByCondition" parameterType="TUser" resultMap="BaseMap">
+        select <include refid="BaseSql"/> from t_user
+        <trim prefix="where" suffixOverrides="and">
+            <if test="id!=null">
+                id=#{id} and
+            </if>
+            <if test="userName!=null">
+                user_name=#{userName} and
+            </if>
+        </trim>
+    </select>
+
+    <!--动态属性插入user记录-->
+    <insert id="insertByDynamicUser" parameterType="TUser" >
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            <if test="userName!=null">
+                user_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
+            <if test="userName!=null">
+                #{userName},
+            </if>
+        </trim>
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            select LAST_INSERT_ID()
+            --             oracle：select SEQ_ID.nextval from dual 并且order改为before
+        </selectKey>
+    </insert>
+
+    <insert id="insertBatchUsers" parameterType="TUser" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_user (<include refid="BaseSql"/>)values
+        <foreach collection="list" separator="," item="user">
+            (#{user.id},#{user.userName},#{user.realName},#{user.sex},#{user.mobile},#{user.email},#{user.note},#{user.positionId})
+        </foreach>
+
+    </insert>
+
+    <select id="selectByIds" parameterType="integer" resultMap="BaseMap">
+        select <include refid="BaseSql"/> from t_user where id in
+        <foreach collection="list" item="v" open="(" close=")" separator=",">
+            #{v}
+        </foreach>
+    </select>
+<!--如果 参数是数组 则改为collection="array"-->
+    <sql id="BaseSql" >
+        id, user_name , real_name , sex, mobile, email, note, position_id
+    </sql>
+</mapper>

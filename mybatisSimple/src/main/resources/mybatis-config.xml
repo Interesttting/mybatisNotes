@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<properties resource="db.properties" />
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="aggressiveLazyLoading" value="false" />
+	</settings>
+	<typeAliases>
+		<package name="com.enjoylearning.mybatis.entity" />
+	</typeAliases>
+	<!--配置environment环境 -->
+	<environments default="development">
+		<!-- 环境配置1，每个SqlSessionFactory对应一个环境 -->
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="UNPOOLED">
+				<property name="driver" value="${jdbc_driver}" />
+				<property name="url" value="${jdbc_url}" />
+				<property name="username" value="${jdbc_username}" />
+				<property name="password" value="${jdbc_password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="mappers/TUserMapper.xml" />
+		<mapper resource="mappers/TRoleMapper.xml" />
+		<mapper resource="mappers/TAccountMapper.xml" />
+	</mappers>
+</configuration>  
