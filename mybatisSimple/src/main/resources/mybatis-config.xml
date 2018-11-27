@@ -29,5 +29,6 @@
 		<mapper resource="mappers/TUserMapper2.xml" />
 		<mapper resource="mappers/TRoleMapper.xml" />
 		<mapper resource="mappers/TAccountMapper.xml" />
+		<mapper class="com.enjoylearning.mybatis.mapper.TUserAnnoMapper"/>
 	</mappers>
 </configuration>  

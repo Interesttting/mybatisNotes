@@ -1,6 +1,7 @@
 package com.enjoylearning.mybatis;
 
 import com.enjoylearning.mybatis.entity.TUser;
+import com.enjoylearning.mybatis.mapper.TUserAnnoMapper;
 import com.enjoylearning.mybatis.mapper.TUserMapper;
 import com.enjoylearning.mybatis.mapper.TUserMapper2;
 import org.apache.ibatis.io.Resources;
@@ -245,5 +246,30 @@ public class MybatisTest {
         TUser u2 =mapper2.selectByPrimaryKey(1);
         System.out.println("u2_name:"+u2.getUserName());
         sqlSession2.close();
+    }
+    //-------------------mybatis注解--------------------------------------------
+    //注解@select
+    @Test
+    public void demo21() {
+        SqlSession sqlSession = factory.openSession(true);
+        TUserAnnoMapper mapper = sqlSession.getMapper(TUserAnnoMapper.class);
+        TUser u = mapper.selectByPrimaryKey(1);
+        System.out.println("name:"+u.getUserName());
+    }
+    //@ResultMap
+    @Test
+    public void demo22() {
+        SqlSession sqlSession = factory.openSession(true);
+        TUserAnnoMapper mapper = sqlSession.getMapper(TUserAnnoMapper.class);
+        List<TUser> list = mapper.selectAll();
+        System.out.println(list.size());
+    }
+    //@Insert
+    @Test
+    public void demo23() {
+        SqlSession sqlSession = factory.openSession(true);
+        TUserAnnoMapper mapper = sqlSession.getMapper(TUserAnnoMapper.class);
+        int t = mapper.insertUser(new TUser());
+        System.out.println(t);
     }
 }
