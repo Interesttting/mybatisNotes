@@ -86,9 +86,11 @@
 --             oracle：select SEQ_ID.nextval from dual 并且order改为before
         </selectKey>
     </insert>
+    <!--根据ID删除用户-->
     <delete id="deleteByUserId" parameterType="int" >
         delete from t_user where id=#{id}
     </delete>
+    <!--普通更新-->
     <update id="updateUser" parameterType="TUser" >
         update t_user
         <trim prefix="set" suffixOverrides=",">
@@ -104,6 +106,7 @@
 --         where 语句 不用想着动态，搞不好设置错了，一般情况下都是根据主键来修改，如果id=null
 --         set元素会自动去除多余的逗号 ,在set下增加id =id 是为了防止user对象所有属性为null时使得程序报错误，根据返回值影响行数查看更新是否成功,如果为0,则需要根据日志查看查询语句
     </update>
+    <!--动态条件查询-->
     <select id="selectByCondition" parameterType="TUser" resultMap="BaseMap">
         select <include refid="BaseSql"/> from t_user
         <trim prefix="where" suffixOverrides="and">
@@ -136,7 +139,7 @@
             --             oracle：select SEQ_ID.nextval from dual 并且order改为before
         </selectKey>
     </insert>
-
+    <!--批量插入 foreach-->
     <insert id="insertBatchUsers" parameterType="TUser" useGeneratedKeys="true" keyProperty="id" >
         insert into t_user (<include refid="BaseSql"/>)values
         <foreach collection="list" separator="," item="user">
@@ -144,14 +147,15 @@
         </foreach>
 
     </insert>
-
+    <!--条件查询 in 使用foreach-->
     <select id="selectByIds" parameterType="integer" resultMap="BaseMap">
         select <include refid="BaseSql"/> from t_user where id in
         <foreach collection="list" item="v" open="(" close=")" separator=",">
             #{v}
         </foreach>
+        <!--如果 参数是数组 则改为collection="array"-->
     </select>
-<!--如果 参数是数组 则改为collection="array"-->
+
     <sql id="BaseSql" >
         id, user_name , real_name , sex, mobile, email, note, position_id
     </sql>
