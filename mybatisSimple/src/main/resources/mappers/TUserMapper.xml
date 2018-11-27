@@ -46,6 +46,10 @@
     <select id="selectByPrimaryKey" resultType="com.enjoylearning.mybatis.entity.TUser" parameterType="java.lang.Integer">
         select <include refid="BaseSql"/> from t_user where id = #{id}
     </select>
+    <!--普通查询 flushCache=true-->
+    <select id="selectByPrimaryKeyFlushCache" resultType="com.enjoylearning.mybatis.entity.TUser" flushCache="true" parameterType="java.lang.Integer">
+        select <include refid="BaseSql"/> from t_user where id = #{id}
+    </select>
     <!--普通查询 返回类型为resultMap-->
     <select id="selectByPrimaryKeyReturnResultMap" resultMap="BaseMap" parameterType="java.lang.Integer">
         select id, user_name , real_name , sex, mobile, email, note, position_id positionId from t_user where id = #{id}
@@ -74,6 +78,7 @@
     <select id="selectTUserById" resultMap="BaseMapNestingResultCollection" parameterType="java.lang.Integer" >
         select a.id, a.user_name ,a.real_name , a.sex, a.mobile, a.email, a.note, a.position_id positionId,c.group_id,c.name group_name from t_user a,t_user_group b, t_group c  where id = #{id} and a.id=b.user_id and b.group_id=c.group_id
     </select>
+
     <!--插入用户 通过自增主键-->
     <insert id="insertByAutoIncrease" parameterType="TUser" useGeneratedKeys="true" keyProperty="id">
         insert into t_user (<include refid="BaseSql"/>)values (#{id},#{userName},#{realName},#{sex},#{mobile},#{email},#{note},#{positionId})

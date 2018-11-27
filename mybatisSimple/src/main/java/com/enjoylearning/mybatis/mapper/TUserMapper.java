@@ -7,6 +7,8 @@ import java.util.List;
 public interface TUserMapper {
 	//简单查询
     TUser selectByPrimaryKey(Integer id);
+    //简单查询
+    TUser selectByPrimaryKeyFlushCache(Integer id);
     //简单查询 返回resultMap
     TUser selectByPrimaryKeyReturnResultMap(Integer id);
     //嵌套结果 association

@@ -6,6 +6,7 @@
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true" />
 		<setting name="aggressiveLazyLoading" value="false" />
+		<setting name="cacheEnabled" value="true" />
 	</settings>
 	<typeAliases>
 		<package name="com.enjoylearning.mybatis.entity" />
@@ -25,6 +26,7 @@
 	</environments>
 	<mappers>
 		<mapper resource="mappers/TUserMapper.xml" />
+		<mapper resource="mappers/TUserMapper2.xml" />
 		<mapper resource="mappers/TRoleMapper.xml" />
 		<mapper resource="mappers/TAccountMapper.xml" />
 	</mappers>

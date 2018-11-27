@@ -1,3 +1,23 @@
 工程包含：
 1、源码工程
 2、简单例子工程
+
+如果需要通过数据库表来反向生成实体类和mapper接口和mapper.xml
+1、mybatisNotes/mybatisSimple/src/main/resources/generatorConfig.xml  
+2、pom.xml添加：
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>1.3.5</version>
+            <scope>test</scope>
+        </dependency>
+			<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.3.2</version>
+				<configuration>
+					<verbose>true</verbose>
+					<overwrite>true</overwrite>
+				</configuration>
+			</plugin>
+3、测试类：com.enjoylearning.mybatis.GeneratorConfigTest

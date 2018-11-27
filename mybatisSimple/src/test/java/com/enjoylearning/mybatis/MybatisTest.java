@@ -2,7 +2,9 @@ package com.enjoylearning.mybatis;
 
 import com.enjoylearning.mybatis.entity.TUser;
 import com.enjoylearning.mybatis.mapper.TUserMapper;
+import com.enjoylearning.mybatis.mapper.TUserMapper2;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MybatisTest {
-    static final String RESOURCE = "mybatis-config2.xml";
+    static final String RESOURCE = "mybatis-config.xml";
     private SqlSessionFactory factory;
 
     @Before
@@ -32,31 +34,6 @@ public class MybatisTest {
         TUserMapper mapper =sqlSession.getMapper(TUserMapper.class);
         TUser u =mapper.selectByPrimaryKey(1);
         System.out.println("name:"+u.getUserName());
-        //嵌套结果 association
-//        TUser u = mapper.selectByPrimaryKeyNestingResult(1);
-        //嵌套查询 association
-//        TUser u = mapper.selectByPrimaryKeyNestingQuery(11);
-        //嵌套查询 懒加载 association
-//        TUser u = mapper.selectByPrimaryKeyNestingQueryWithLazy(1);
-        //嵌套查询 懒加载 (非懒加载则去除fetchType="lazy") Collection
-//        TUser u = mapper.selectByPrimaryKeyNestingQueryCollection(1);
-        //同时存在CollectionAndAssociation
-//        TUser u = mapper.selectByPrimaryKeyNestingQueryWithLazyCollectionAndAssociation(1);
-//        System.out.println(123);
-//        System.out.println(u.getRoles());
-//        System.out.println(123);
-//        System.out.println(u.getAccount());
-
-        //todo 多对多 用户和组 用户关联组使用嵌套结果 组关联用户使用嵌套查询
-        TUser user =new TUser();
-        user.setUserName("www");
-        user.setSex((byte) 0);
-        //插入用户 通过自增主键
-//        int t =mapper.insertByAutoIncrease(user);
-        //插入用户 通过SelectKey
-        int t =mapper.insertBySelectKey(user);
-        System.out.println("t:"+t);
-        System.out.println(user.getId());
     }
     //嵌套结果 association
     @Test
@@ -191,7 +168,7 @@ public class MybatisTest {
         int t = mapper.insertByDynamicUser(user);
         System.out.println("影响行数："+t);
     }
-    //测试批量插入
+    //测试批量插入  (批量插入方式一)
     @Test
     public void demo15(){
         SqlSession sqlSession =factory.openSession(true);
@@ -216,5 +193,57 @@ public class MybatisTest {
         ids.add(8);
         List<TUser> us =mapper.selectByIds(ids);
         System.out.println(us.size());
+    }
+    //批量操作（可以是批量插入或者是批量更新或者混合） (批量插入方式二)
+    //批量操作要考虑操作的数量，避免内存溢出或者操作超时
+    @Test
+    public void demo17(){
+        //使用batch类型的执行器并且事务不自动提交
+        SqlSession sqlSession =factory.openSession(ExecutorType.BATCH,false);
+        TUserMapper mapper =sqlSession.getMapper(TUserMapper.class);
+        TUser user =new TUser();
+        user.setUserName("www");
+        user.setSex((byte) 0);
+        int t = mapper.insertBySelectKey(user);
+        int t2 = mapper.insertBySelectKey(user);
+        sqlSession.commit();
+        System.out.println("t:"+t);
+    }
+    //-----------------------------------cache---------------------------------------------------
+    //一级缓存测试：对于key相同的方法调用不会重复执行sql语句。
+    @Test
+    public void demo18(){
+        SqlSession sqlSession =factory.openSession(true);
+        TUserMapper mapper =sqlSession.getMapper(TUserMapper.class);
+        TUser u =mapper.selectByPrimaryKey(1);
+        System.out.println("name:"+u.getUserName());
+        TUser u2 =mapper.selectByPrimaryKey(1);
+        System.out.println("u2_name:"+u2.getUserName());
+    }
+    //一级缓存测试：flushCache=true 则不会缓存到一级缓存。
+    @Test
+    public void demo19(){
+        SqlSession sqlSession =factory.openSession(true);
+        TUserMapper mapper =sqlSession.getMapper(TUserMapper.class);
+        TUser u =mapper.selectByPrimaryKeyFlushCache(1);
+        System.out.println("name:"+u.getUserName());
+        TUser u2 =mapper.selectByPrimaryKeyFlushCache(1);
+        System.out.println("u2_name:"+u2.getUserName());
+    }
+    //二级缓存 相同的key不同的sqlSession共享缓存
+    //mybatis二级缓存容易出现脏读，不做过多测试，只要知道通过namespace隔离，不同sqlSession的同一个mapper相同的key共享内存
+    @Test
+    public void demo20(){
+        SqlSession sqlSession =factory.openSession(true);
+        TUserMapper2 mapper =sqlSession.getMapper(TUserMapper2.class);
+        TUser u =mapper.selectByPrimaryKey(1);
+        System.out.println("name:"+u.getUserName());
+        //似乎要sqlSession关闭后才能体现二级缓存的效果
+        sqlSession.close();
+        SqlSession sqlSession2 =factory.openSession(true);
+        TUserMapper2 mapper2 =sqlSession2.getMapper(TUserMapper2.class);
+        TUser u2 =mapper2.selectByPrimaryKey(1);
+        System.out.println("u2_name:"+u2.getUserName());
+        sqlSession2.close();
     }
 }
