@@ -2,5 +2,6 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/mybatis-3-master" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/spring-1.3.x" charset="UTF-8" />
   </component>
 </project>

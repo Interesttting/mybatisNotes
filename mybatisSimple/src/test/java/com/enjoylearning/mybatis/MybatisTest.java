@@ -119,12 +119,13 @@ public class MybatisTest {
     //插入用户 通过selectKey
     @Test
     public void demo10(){
-        SqlSession sqlSession =factory.openSession(true);
+        SqlSession sqlSession =factory.openSession(false);
         TUserMapper mapper =sqlSession.getMapper(TUserMapper.class);
         TUser user =new TUser();
         user.setUserName("www");
         user.setSex((byte) 0);
         int t = mapper.insertBySelectKey(user);
+        sqlSession.commit();
         System.out.println("t:"+t);
         System.out.println(user.getId());
     }

@@ -24,6 +24,10 @@ import org.apache.ibatis.cache.CacheException;
 
 /**
  * @author Clinton Begin
+ *
+ * Perpetual
+ * 英 [pə'petʃuəl]
+ * adj. 永久的；永恒的；一再往复的
  */
 public class PerpetualCache implements Cache {
 

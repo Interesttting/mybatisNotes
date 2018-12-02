@@ -33,10 +33,12 @@ public class UnpooledDataSourceTest {
     // https://code.google.com/p/mybatis/issues/detail?id=430
     UnpooledDataSource dataSource = null;
     dataSource = new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:multipledrivers", "sa", "");
-    dataSource.getConnection().close();
+    dataSource.getConnection()
+            .close();
     int before = countRegisteredDrivers();
     dataSource = new UnpooledDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:multipledrivers", "sa", "");
-    dataSource.getConnection().close();
+    dataSource.getConnection()
+            .close();
     assertEquals(before, countRegisteredDrivers());
   }
 
@@ -46,6 +48,7 @@ public class UnpooledDataSourceTest {
     int before = countRegisteredDrivers();
     ClassLoader driverClassLoader = null;
     UnpooledDataSource dataSource = null;
+    //java中使用URLClassLoader访问外部jar包的java类
     driverClassLoader = new URLClassLoader(new URL[] { new URL("jar:file:/PATH_TO/mysql-connector-java-5.1.25.jar!/") });
     dataSource = new UnpooledDataSource(driverClassLoader, "com.mysql.jdbc.Driver", "jdbc:mysql://127.0.0.1/test", "root", "");
     dataSource.getConnection().close();

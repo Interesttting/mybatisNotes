@@ -3,5 +3,7 @@
 <configuration>
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true" />
+        <!--logImpl可选的值有：SLF4J、LOG4J、LOG4J2、JDK_LOGGING、COMMONS_LOGGING、STDOUT_LOGGING、NO_LOGGING-->
+		<setting name="logImpl" value="JDK_LOGGING"/>
 	</settings>
 </configuration>  

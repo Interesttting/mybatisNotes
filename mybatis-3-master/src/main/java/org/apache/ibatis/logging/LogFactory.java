@@ -32,8 +32,16 @@ public final class LogFactory {
   private static Constructor<? extends Log> logConstructor;
 
   //自动扫描日志实现，并且第三方日志插件加载优先级如下：slf4J → commonsLoging → Log4J2 → Log4J → JdkLog
+  //假如mybatis包下有以下所有的jar包，硬是要指定使用jdkLogging必须要排除之前的jar
   static {
+
     tryImplementation(LogFactory::useSlf4jLogging);
+//等价于
+//    tryImplementation(new Runnable() {
+//      public void run() {
+//        useSlf4jLogging();
+//      }
+//    });
     tryImplementation(LogFactory::useCommonsLogging);
     tryImplementation(LogFactory::useLog4J2Logging);
     tryImplementation(LogFactory::useLog4JLogging);

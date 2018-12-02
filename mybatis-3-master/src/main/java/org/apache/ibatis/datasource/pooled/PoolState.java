@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * PoolState：用于管理PooledConnection对象状态的组件，通过两个list分别
+ * PoolState：用于管理PooledConnection集合状态的组件，通过两个list分别
  * 管理空闲状态的连接资源和活跃状态的连接资源
  * 
  * @author Clinton Begin

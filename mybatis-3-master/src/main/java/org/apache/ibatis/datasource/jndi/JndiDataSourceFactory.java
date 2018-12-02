@@ -28,6 +28,18 @@ import org.apache.ibatis.datasource.DataSourceFactory;
 
 /**
  * @author Clinton Begin
+ *
+ *   <environments default="development">
+ *         <environment id="development">
+ *                                  jdbc/managed
+ *             <transactionManager type="JDBC" />
+ *             <dataSource type="JNDI">
+ *                 <property name="data_source" value="java:comp/env/jndi/mybatis"/>
+ *             </dataSource>
+ *         </environment>
+ *          可以配置多个environment
+ *     </environments>
+ *    连接池的配置在web容器的配置文件中
  */
 public class JndiDataSourceFactory implements DataSourceFactory {
 

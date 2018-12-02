@@ -37,6 +37,8 @@ import org.apache.ibatis.logging.LogFactory;
  * PooledDataSource：一个简单，同步的、线程安全的数据库连接池
  *
  * @author Clinton Begin
+ *
+ * 从PooledDataSource中获取连接和归还连接，都会修改到PoolState中的值，PoolState是对数据库连接池管理以及统计的一个对象
  */
 //使用连接池的数据源
 public class PooledDataSource implements DataSource {
@@ -401,7 +403,7 @@ public class PooledDataSource implements DataSource {
       }
     }
   }
-
+  //获取连接
   private PooledConnection popConnection(String username, String password) throws SQLException {
     boolean countedWait = false;
     PooledConnection conn = null;
@@ -410,15 +412,15 @@ public class PooledDataSource implements DataSource {
 
     while (conn == null) {
       synchronized (state) {//获取连接必须是同步的
-        if (!state.idleConnections.isEmpty()) {//检测是否有空闲连接
+        if (!state.idleConnections.isEmpty()) { //检测是否有空闲连接
           // Pool has available connection
           //有空闲连接直接使用
           conn = state.idleConnections.remove(0);
           if (log.isDebugEnabled()) {
             log.debug("Checked out connection " + conn.getRealHashCode() + " from pool.");
           }
-        } else {// 没有空闲连接
-          if (state.activeConnections.size() < poolMaximumActiveConnections) {//判断活跃连接池中的数量是否大于最大连接数
+        } else { // 没有空闲连接
+          if (state.activeConnections.size() < poolMaximumActiveConnections) {  //判断活跃连接池中的数量是否大于最大连接数
             // 没有则可创建新的连接
             conn = new PooledConnection(dataSource.getConnection(), this);
             if (log.isDebugEnabled()) {
@@ -428,24 +430,16 @@ public class PooledDataSource implements DataSource {
             //获取最早创建的连接
             PooledConnection oldestActiveConnection = state.activeConnections.get(0);
             long longestCheckoutTime = oldestActiveConnection.getCheckoutTime();
-            if (longestCheckoutTime > poolMaximumCheckoutTime) {//检测是否已经以及超过最长使用时间
+            if (longestCheckoutTime > poolMaximumCheckoutTime) { //检测是否已经以及超过最长使用时间
               // 如果超时，对超时连接的信息进行统计
               state.claimedOverdueConnectionCount++;//超时连接次数+1
               state.accumulatedCheckoutTimeOfOverdueConnections += longestCheckoutTime;//累计超时时间增加
               state.accumulatedCheckoutTime += longestCheckoutTime;//累计的使用连接的时间增加
               state.activeConnections.remove(oldestActiveConnection);//从活跃队列中删除
-              if (!oldestActiveConnection.getRealConnection().getAutoCommit()) {//如果超时连接未提交，则手动回滚
+              if (!oldestActiveConnection.getRealConnection().getAutoCommit()) { //如果超时连接未提交，则手动回滚
                 try {
                   oldestActiveConnection.getRealConnection().rollback();
                 } catch (SQLException e) {//发生异常仅仅记录日志
-                  /*
-                     Just log a message for debug and continue to execute the following
-                     statement like nothing happend.
-                     Wrap the bad connection with a new PooledConnection, this will help
-                     to not intterupt current executing thread and give current thread a
-                     chance to join the next competion for another valid/good database
-                     connection. At the end of this loop, bad {@link @conn} will be set as null.
-                   */
                   log.debug("Bad connection. Could not roll back");
                 }  
               }
@@ -477,7 +471,7 @@ public class PooledDataSource implements DataSource {
             }
           }
         }
-        if (conn != null) {//获取连接成功的，要测试连接是否有效，同时更新统计数据
+        if (conn != null) { //获取连接成功的，要测试连接是否有效，同时更新统计数据
           // ping to server and check the connection is valid or not
           if (conn.isValid()) {//检测连接是否有效
             if (!conn.getRealConnection().getAutoCommit()) {

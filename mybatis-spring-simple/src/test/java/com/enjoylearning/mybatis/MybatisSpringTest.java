@@ -11,6 +11,8 @@ import java.util.List;
 import com.enjoylearning.mybatis.entity.TUser;
 import com.enjoylearning.mybatis.mapper.TUserMapper;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -49,7 +51,11 @@ public class MybatisSpringTest {
         System.out.println("name:"+u.getUserName());
     }
 
-
+    @Test
+    public void demo2(){
+        Log log = LogFactory.getLog(MybatisSpringTest.class);
+        log.error("123");
+    }
 
 
 

@@ -3,7 +3,7 @@
 <mapper namespace="com.enjoylearning.mybatis.mapper.TUserMapper2">
     <!--<cache></cache>-->
     <!--FIFO:先进先出；60000：60s；-->
-    <cache eviction="FIFO" flushInterval="60000" readOnly="true" size="512"></cache>
+    <cache  eviction="FIFO" flushInterval="60000" readOnly="true" size="512"></cache>
     <select id="selectByPrimaryKey" resultType="com.enjoylearning.mybatis.entity.TUser" parameterType="java.lang.Integer">
         select <include refid="BaseSql"/> from t_user where id = #{id}
     </select>

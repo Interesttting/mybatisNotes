@@ -30,6 +30,9 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  * 
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ * ConnectionLogger和Connection相比增加了预编译的日志打印功能，
+ * 在调用prepareStatement、prepareCall、createStatement的方法时创建的是日志打印能力的代理对象
  * 
  */
 public final class ConnectionLogger extends BaseJdbcLogger implements InvocationHandler {

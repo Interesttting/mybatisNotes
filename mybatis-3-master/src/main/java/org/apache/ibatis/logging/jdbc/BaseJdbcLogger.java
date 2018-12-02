@@ -34,6 +34,10 @@ import org.apache.ibatis.reflection.ArrayUtil;
  * 
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ *
+ * BaseJdbcLogger 对JDBC的原生方法进行归集，对要设置的列名以及值进行归集
+ *
  */
 //所有日志增强的抽象基类
 public abstract class BaseJdbcLogger {

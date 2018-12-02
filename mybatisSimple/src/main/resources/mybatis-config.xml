@@ -15,6 +15,7 @@
 	<environments default="development">
 		<!-- 环境配置1，每个SqlSessionFactory对应一个环境 -->
 		<environment id="development">
+			<!--jdbc/managed-->
 			<transactionManager type="JDBC" />
 			<dataSource type="UNPOOLED">
 				<property name="driver" value="${jdbc_driver}" />

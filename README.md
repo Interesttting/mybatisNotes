@@ -1,6 +1,8 @@
 工程包含：
 1、源码工程
 2、简单例子工程
+3、mybatis集成spring源码
+4、mybatis集成spring的例子
 
 如果需要通过数据库表来反向生成实体类和mapper接口和mapper.xml
 1、mybatisNotes/mybatisSimple/src/main/resources/generatorConfig.xml  

@@ -20,6 +20,9 @@ import javax.sql.DataSource;
 
 /**
  * @author Clinton Begin
+ * ds的三种类型 unpool、pooled、jndi
+ * 所有的ds必须是其中的一种
+ *
  */
 public interface DataSourceFactory {
 

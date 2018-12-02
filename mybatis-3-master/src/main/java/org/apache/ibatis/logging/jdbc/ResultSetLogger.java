@@ -79,6 +79,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
             printColumnValues(columnCount);
           }
         } else {
+          //调用next方法后没有元素则返回0/false,打印总数rows
           debug("     Total: " + rows, false);
         }
       }
