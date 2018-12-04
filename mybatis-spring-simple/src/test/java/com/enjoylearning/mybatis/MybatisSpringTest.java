@@ -11,6 +11,7 @@ import java.util.List;
 import com.enjoylearning.mybatis.entity.TUser;
 import com.enjoylearning.mybatis.mapper.TUserMapper;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -62,10 +63,14 @@ public class MybatisSpringTest {
     public void demo3(){
         SqlSession sqlSession =sqlSessionFactory.openSession();
         TUserMapper mapper =sqlSession.getMapper(TUserMapper.class);
+
         //查看第二页
         PageHelper.startPage(2,3);
         List<TUser> list =mapper.selectByCondition(new TUser());
-        System.out.println(list.size());
+        //所有的分页信息封装到了pageInfo
+        PageInfo<TUser> pageInfo=new PageInfo<>(list);
+        System.out.println(pageInfo.getSize());
+        //更多调用例子查阅https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md
     }
 
 }

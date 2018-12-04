@@ -65,7 +65,15 @@
 		<property name="configLocation" value="mybatis-config.xml"/>
 		<property name="plugins">
 			<array>
-				<bean class="com.github.pagehelper.PageInterceptor" />
+				<bean class="com.github.pagehelper.PageInterceptor" >
+					<property name="properties">
+						<!--使用下面的方式配置参数，一行配置一个 -->
+						<!--更多参数配置查阅https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md-->
+						<value>
+							helperDialect=mysql
+						</value>
+					</property>
+				</bean>
 			</array>
 		</property>
 	</bean>
