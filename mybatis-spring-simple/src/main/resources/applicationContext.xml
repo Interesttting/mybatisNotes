@@ -63,12 +63,25 @@
 		<property name="mapperLocations" value="classpath*:mappers/*.xml" />
 		<!--如果需要在mybatis配置文件中配置settings和plugins时需要配置configLocation属性-->
 		<property name="configLocation" value="mybatis-config.xml"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor" />
+			</array>
+		</property>
 	</bean>
-	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+
+
+
+	<!-- 方式1：DAO接口所在包名，Spring会自动查找其下的类 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.enjoylearning.mybatis.mapper" />
 	</bean>
 
+	<!--方式2：逐个对mapper接口进行注册 （不推荐）-->
+	<!--<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+		<!--<property name="mapperInterface" value="com.enjoylearning.mybatis.mapper.TUserMapper" />-->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory" />-->
+	<!--</bean>-->
 
 
 	<!-- (事务管理)transaction manager -->

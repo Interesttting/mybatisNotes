@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.enjoylearning.mybatis.entity.TUser;
 import com.enjoylearning.mybatis.mapper.TUserMapper;
+import com.github.pagehelper.PageHelper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -56,7 +57,15 @@ public class MybatisSpringTest {
         Log log = LogFactory.getLog(MybatisSpringTest.class);
         log.error("123");
     }
-
-
+    //分页插件例子
+    @Test
+    public void demo3(){
+        SqlSession sqlSession =sqlSessionFactory.openSession();
+        TUserMapper mapper =sqlSession.getMapper(TUserMapper.class);
+        //查看第二页
+        PageHelper.startPage(2,3);
+        List<TUser> list =mapper.selectByCondition(new TUser());
+        System.out.println(list.size());
+    }
 
 }
