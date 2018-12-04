@@ -184,12 +184,15 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<Object> multipleResults = new ArrayList<>();
 
     int resultSetCount = 0;
-    //statment可能返回多个结果集对象，这里先取出第一个结果集
+    //statment可能返回多个结果集对象，
+
+    //这里先取出第一个结果集
     ResultSetWrapper rsw = getFirstResultSet(stmt);
     //获取结果集对应resultMap，本质就是获取字段与java属性的映射规则
     List<ResultMap> resultMaps = mappedStatement.getResultMaps();
     int resultMapCount = resultMaps.size();
-    validateResultMapsCount(rsw, resultMapCount);//结果集和resultMap不能为空，为空抛出异常
+    //结果集和resultMap不能为空，为空抛出异常
+    validateResultMapsCount(rsw, resultMapCount);
     while (rsw != null && resultMapCount > resultSetCount) {
      //获取当前结果集对应的resultMap
       ResultMap resultMap = resultMaps.get(resultSetCount);
@@ -359,7 +362,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 	//创建结果上下文，所谓的上下文就是专门在循环中缓存结果对象的
     DefaultResultContext<Object> resultContext = new DefaultResultContext<>();
     //1.根据分页信息，定位到指定的记录
-    skipRows(rsw.getResultSet(), rowBounds);
+    skipRows(rsw.getResultSet(), rowBounds);//ps：mybatis在执行当前代码之前执行了sql才进行分页，说明说mybatis的分页是查询了所有的结果后再选中其中某一页的数据包装成pojo
     //2.shouldProcessMoreRows判断是否需要映射后续的结果，实际还是翻页处理，避免超过limit
     while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       //3.进一步完善resultMap信息，主要是处理鉴别器的信息

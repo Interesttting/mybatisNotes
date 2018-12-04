@@ -292,7 +292,6 @@ public class MetaObjectTest {
     parametersEmulation.put("filterParams", param1);
 
     MetaObject meta = SystemMetaObject.forObject(parametersEmulation);
-
     assertEquals(param1.get(0), meta.getValue("filterParams[0]"));
     assertEquals(param1.get(1), meta.getValue("filterParams[1]"));
     assertEquals(param1.get(2), meta.getValue("filterParams[2]"));

@@ -30,12 +30,14 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
+ *
+ * 解析过程：XMLStatementBuilder 解析增删改查标签 生成MappedStatement
  */
 public final class MappedStatement {
 
   private String resource;//节点的完整的id属性，包括命名空间
   private Configuration configuration;
-  private String id;//节点的id属性
+  private String id;//节点的id属性=命名空间+方法名
   private Integer fetchSize;//节点的fetchSize属性,查询数据的条数
   private Integer timeout;//节点的timeout属性，超时时间
   private StatementType statementType;//节点的statementType属性,默认值：StatementType.PREPARED;疑问？

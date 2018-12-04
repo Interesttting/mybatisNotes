@@ -607,6 +607,7 @@ public class Configuration {
 
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 	//创建RoutingStatementHandler对象，实际由statmentType来指定真实的StatementHandler来实现
+    //ps：RoutingStatementHandler静态代理类
 	StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject, rowBounds, resultHandler, boundSql);
     statementHandler = (StatementHandler) interceptorChain.pluginAll(statementHandler);
     return statementHandler;

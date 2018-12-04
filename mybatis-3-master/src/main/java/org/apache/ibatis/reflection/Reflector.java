@@ -43,6 +43,8 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  * allows for easy mapping between property names and getter/setter methods.
  *
  * @author Clinton Begin
+ *
+ * 一个Class对象对应一个Reflector对象，创建Reflector对象时会将Class对象的所有信息解析并封装起来，方便操作
  */
 public class Reflector {
 

@@ -41,6 +41,7 @@ import org.apache.ibatis.transaction.Transaction;
 public class CachingExecutor implements Executor {
 
   private final Executor delegate;
+  //二级缓存管理器
   private final TransactionalCacheManager tcm = new TransactionalCacheManager();
 
   public CachingExecutor(Executor delegate) {

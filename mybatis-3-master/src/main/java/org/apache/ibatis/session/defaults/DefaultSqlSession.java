@@ -147,6 +147,8 @@ public class DefaultSqlSession implements SqlSession {
       //从configuration中获取要执行的sql语句的配置信息
       MappedStatement ms = configuration.getMappedStatement(statement);
       //通过executor执行语句，并返回指定的结果集
+      //ps：如果配置了二级缓存 先调用CachingExecutor.query,然后在CachingExecutor.query方法中再调用BaseExecutor.query
+      //ps:CachingExecutor起到装饰做了，新增了二级缓存查询的作用
       return executor.query(ms, wrapCollection(parameter), rowBounds, Executor.NO_RESULT_HANDLER);
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error querying database.  Cause: " + e, e);

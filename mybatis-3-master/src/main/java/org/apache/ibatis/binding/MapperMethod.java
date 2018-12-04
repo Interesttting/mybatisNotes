@@ -86,6 +86,7 @@ public class MapperMethod {
         } else {//处理返回为单一对象的情况
           //通过参数解析器解析解析参数
           Object param = method.convertArgsToSqlCommandParam(args);
+          //command.getName()=命名空间+方法名称
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional() &&
               (result == null || !method.getReturnType().equals(result.getClass()))) {

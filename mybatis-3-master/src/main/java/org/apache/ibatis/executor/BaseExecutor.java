@@ -154,7 +154,7 @@ public abstract class BaseExecutor implements Executor {
     List<E> list;
     try {
       queryStack++;//查询层次加一
-      list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;//查询以及缓存
+      list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;//查询以及缓存 localCache一级缓存对象
       if (list != null) {
     	 //针对调用存储过程的结果处理
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
@@ -333,7 +333,14 @@ public abstract class BaseExecutor implements Executor {
     List<E> list;
     localCache.putObject(key, EXECUTION_PLACEHOLDER);//在缓存中添加占位符
     try {
-      //调用抽象方法doQuery，方法查询数据库并返回结果，可选的实现包括：simple、reuse、batch
+      //调用BaseExecutor抽象方法doQuery，方法查询数据库并返回结果，可选的实现包括：simple、reuse、batch，在sqlSessionFactory.getSqlSession时可以选择。
+      // 或者在于spring整合时配置
+      // <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+      //        <constructor-arg index="0" ref="sqlSessionFactory"/>
+      //        <constructor-arg index="1" value="BATCH"/>
+      //    </bean>
+      //一般情况下就是使用SimpleExecutor执行器
+      //ps：BaseExecutor和CachingExecutor是Executor的直接子类；而simple、reuse、batch是BaseExecutor的直接子类；所以doQuery实现方法从BaseExecutor的直接子类从选择
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
       localCache.removeObject(key);//在缓存中删除占位符
