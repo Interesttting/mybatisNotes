@@ -74,6 +74,14 @@
 						</value>
 					</property>
 				</bean>
+				<bean class="com.enjoylearning.mybatis.plgins.ThresholdInterceptor" >
+					<property name="properties">
+						<!--由于查询时间太快，这里阈值设置成0毫秒-->
+						<value>
+							threshold=0
+						</value>
+					</property>
+				</bean>
 			</array>
 		</property>
 	</bean>

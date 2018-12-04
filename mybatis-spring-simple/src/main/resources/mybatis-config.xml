@@ -8,10 +8,8 @@
 	</settings>
 
 
-	<!--<plugins>-->
-	<!--<plugins>-->
-		<!--<plugin interceptor="com.github.pagehelper.PageInterceptor" />-->
-	<!--</plugins>-->
-	<!--</plugins>-->
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor" />
+	</plugins>
 
 </configuration>  
